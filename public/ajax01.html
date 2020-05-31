@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="zh">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="./bootstrap-4.4.1-dist/css/bootstrap.css">
+    <script src="./js/jquery-3.4.1.js"></script>
+    <script src="./bootstrap-4.4.1-dist/js/bootstrap.js"></script>
+</head>
+
+<body>
+    <div class="container">
+        <div class="col-md-6">
+            <form onsubmit="return doSend()">
+                <div class="form-group">
+                    <label for="exampleInputEmail1">a</label>
+                    <input type="number" class="form-control" id="a" name="a" aria-describedby="emailHelp">
+                </div>
+                <div class="form-group">
+                    <label for="exampleInputPassword1">b</label>
+                    <input type="number" class="form-control" id="b" name="b">
+                </div>
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+        </div>
+        <div id="info"></div>
+    </div>
+</body>
+<script>
+    function doSend() {
+        $.get('/try-plus', {
+            a: $('#a').val(),
+            b: $('#b').val()
+        }, (data) => {
+            $('#info').text(data);
+        })
+        return false;
+    }
+</script>
+
+</html>

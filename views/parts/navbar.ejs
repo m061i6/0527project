@@ -1,0 +1,45 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <a class="navbar-brand" href="#">控制表單</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+    aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item <%= pageName == "ab-list" ? 'active' : ''%>">
+        <a class="nav-link" href="/address-book/list">列表</a>
+      </li>
+      <li class="nav-item <%= pageName == "ab-add" ? 'active' : ''%>">
+        <a class="nav-link" href="/address-book/add">新增</a>
+      </li>
+    </ul>
+    <ul class="navbar-nav">
+      <%if (locals.admins && locals.admins.account){%>
+        <li class="nav-item">
+          <a class="nav-link"><%=locals.admins.nickname%></a>
+        </li><li class="nav-item">
+          <a class="nav-link">|</a>
+        </li>
+        <li class="nav-item>">
+          <a class="nav-link" href="/address-book/logout">登出</a>
+        </li>
+      <%}else{%>
+        <li class="nav-item>">
+          <a class="nav-link" href="/address-book/login">管理登入</a>
+        </li>
+      <%}%>
+    </ul>
+  </div>
+</nav>
+
+<style>
+  ul.navbar-nav li.nav-item.active {
+    border-radius: 5px;
+    background: #007bff;
+  }
+
+  ul.navbar-nav li.nav-item.active a {
+    color: #FFF !important;
+  }
+</style>

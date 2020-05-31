@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <form name="form1" action="try-upload" method="post" enctype="multipart/form-data" style="display: none;">
+        <input type="file" name="avatar" id="avatar">
+    </form>
+    <button onclick="document.querySelector('#avatar').click()">選取及上傳</button>
+    <script>
+        const avatar = document.querySelector('#avatar');
+        avatar.addEventListener('change',(event)=>{
+            document.form1.submit();
+        });
+    </script>
+</body>
+
+</html>

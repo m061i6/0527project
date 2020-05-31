@@ -1,0 +1,64 @@
+<%- include('../project_parts/html-head.ejs') %>
+<%- include('../project_parts/navbar.ejs') %>
+<div class="container">
+    <h1>語句分析</h1>
+    <div class="row">
+        <div class="col ui warning message">
+            <div class="header">使用方式</div>
+            <ul class="attention">
+                <li>輸入一句話</li>
+                <li>按下「開始分析」按鈕</li>
+            </ul>
+        </div>
+    </div>
+    <div class="alert alert-warning" role="alert" style="display: none;">輸入欲分析的句子</div>
+    <fieldset>
+        <label for="sentence">輸入欲分析的句子</label>
+        <input id="sentence" name="sentence" class="form-control" type="text" placeholder="請輸入欲分析的句子">
+        <button id="upload-file-btn" type="button" class="btn btn-primary">開始辨識</button>
+    </fieldset>
+    <div id="wrapper" style="width:800px; display:table;">
+        <div id="jsonOutput" style="width:400px; display:table-cell;">
+        </div>
+    </div>
+</div>
+<%- include('../project_parts/scripts.ejs') %>
+<script>
+    $('#upload-file-btn').click(function () {
+        var inputText = $("#sentence").val().trim();
+        if (!inputText) {
+            $('.alert').slideDown();
+            return;
+        }
+        const url =
+            'https://westus.api.cognitive.microsoft.com/luis/prediction/v3.0/apps/e45ae159-e852-4690-bd42-24ba9362fecd/slots/staging/predict?subscription-key=96b4dd606636470b81a242b2c676bc2c&verbose=true&show-all-intents=true&log=true&query=' +
+            inputText;
+        $.ajax({
+            type: 'GET',
+            url: url,
+            contentType: false,
+            //cache: false,
+            processData: false,
+        }).done(function (result) {
+            var str = `<h3>您輸入【${result.query}】</h3>`;
+            str += "<h4>分析結果:</h4>";
+            $.each(result.prediction.intents, function (k, v) {
+                str += "<p>" + k + " : " + v.score +
+                    "</p>";
+            });
+            if (result.prediction.entities !== 'undefined') {
+                str += "<hr>"
+                $.each(result.prediction.entities.$instance, function (k, v) {
+                    $.each(v,function (kk, vv) {
+                        str += "<p>" + k + " : " + vv.text + " ( " + vv.score +") </p>";
+                    });
+                    // str += "<p>" + k + " : " + v[0].text + " ( " + v[0].score + ") </p>";
+                });
+            }
+            $("#jsonOutput").html(str);
+        }).fail(function (err) {
+            alert(err.statusText);
+        });
+    });
+</script>
+<%- include('../project_parts/html-foot.ejs') %>

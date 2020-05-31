@@ -1,0 +1,51 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <a class="navbar-brand" href="/project/list">2019年國家公園景點</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+    aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item <%= pageName == "list" ? 'active' : ''%>">
+        <a class="nav-link" href="/project/list">列表</a>
+      </li>
+      <li class="nav-item <%= pageName == "chart" ? 'active' : ''%>">
+        <a class="nav-link" href="/project/chart">造訪人次</a>
+      </li>
+      <li class="nav-item <%= pageName == "resnet" ? 'active' : ''%>">
+        <a class="nav-link" href="/project/resnet">影像辨識</a>
+      </li>
+      <li class="nav-item <%= pageName == "luis" ? 'active' : ''%>">
+        <a class="nav-link" href="/project/luis">語句分析</a>
+      </li>
+    </ul>
+    <ul class="navbar-nav">
+      <%if (locals.admins && locals.admins.account){%>
+        <li class="nav-item">
+          <a class="nav-link"><%=locals.admins.nickname%></a>
+        </li><li class="nav-item">
+          <a class="nav-link">|</a>
+        </li>
+        <li class="nav-item>">
+          <a class="nav-link" href="/project/logout">登出</a>
+        </li>
+      <%}else{%>
+        <li class="nav-item>">
+          <a class="nav-link" href="/project/login">管理登入</a>
+        </li>
+      <%}%>
+    </ul>
+  </div>
+</nav>
+
+<style>
+  ul.navbar-nav li.nav-item.active {
+    border-radius: 5px;
+    background: #007bff;
+  }
+
+  ul.navbar-nav li.nav-item.active a {
+    color: #FFF !important;
+  }
+</style>

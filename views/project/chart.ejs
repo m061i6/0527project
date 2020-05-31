@@ -1,0 +1,154 @@
+<%- include('../project_parts/html-head.ejs') %>
+<%- include('../project_parts/navbar.ejs') %>
+<style>
+</style>
+<div class="container">
+    <h1>2019年國家公園各景點造訪人次統計</h1>
+    
+    <div class="row">
+        <div class="col ui warning message">
+            <div class="header">使用方式</div>
+            <ul class="attention">
+                <li>選擇國家公園</li>
+                <li>選擇景點</li>
+            </ul>
+            <h6>資料來源：臺北市政府、新北市政府、桃園市政府、臺中市政府、臺南市政府、高雄市政府、各縣市政府及公民營遊憩區管理單位。</h6>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-6" id="selectBar">
+            <div id="areaSel">
+                <label for="area">選擇國家公園</label>
+                <select name="area" class="form-control form-control" id="area">
+                    <option value="0">請選擇國家公園</option>
+                </select>
+            </div>
+            <div id="viewpointSel">
+                <label for="viewpoint">選擇景點</label>
+                <select name="viewpoint" class="form-control form-control" id="viewpoint">
+                    <option value="0">請選擇景點</option>
+                </select>
+            </div>
+        </div>
+        <div class="col-6 content">
+            <div id="viewInfo" class="text-center">
+
+            </div>
+            <div id="chartBox"></div>
+        </div>
+    </div>
+
+</div>
+<%- include('../project_parts/scripts.ejs') %>
+<script>
+    $(function () {
+        console.log("ready");
+        $('.content').hide();
+        $('#selectBar').hide();
+        $('#viewpointSel').hide();
+        getAreaData();
+        $('#area').on('change', getViewpointData);
+        $('#viewpoint').on('change', getVisitors);
+    });
+
+    function getAreaData() {
+        $.get('/project/getArea/', (data) => {
+            for (let i = 0; i < data.area.length; i++) {
+                let option = `<option value="${data.area[i].area_id}">${data.area[i].area_name}</option>`;
+                $('#area').append(option);
+            }
+            $('#selectBar').show();
+        })
+    }
+
+    function getViewpointData() {
+        $('#viewpointSel').hide();
+        $('#viewpoint').html('<option value="0">請選擇景點</option>');
+        $('#chartBox').html('<canvas id="myChart" width="400" height="400"></canvas>');
+        $('.content').hide();
+        let area_id = this.value;
+        if (area_id == 0) return;
+        $.get(`/project/getViewpoint/${area_id}`, (data) => {
+            console.log(`/project/getViewpoint/${area_id}`);
+            for (let i = 0; i < data.viewpoint.length; i++) {
+                let option = `<option value="${data.viewpoint[i].auto_id}">${data.viewpoint[i].name}</option>`;
+                $('#viewpoint').append(option);
+            }
+            $('#viewpointSel').show();
+        })
+    }
+
+    function getVisitors() {
+        $('.content').hide();
+        $('#chartBox').html('<canvas id="myChart" width="400" height="400"></canvas>');
+        let vid = this.value;
+        if (vid == 0) return;
+        let viewName = $('#viewpoint :selected').text();
+        let visitorsArr = [];
+        $.get('/project/getdata/' + vid, (data) => {
+            for (let i = 0; i < data.visitors.length; i++) {
+                visitorsArr.push(data.visitors[i].visitors);
+            }
+            paintData(visitorsArr);
+            let allVisitor = SumDatareduce(visitorsArr);
+            $('#viewInfo').html(`<h3>${viewName}</h3><h5>年度總人次：${allVisitor}`)
+        })
+        function SumDatareduce(arr) {
+            return arr.reduce((a, b) => a + b);
+        }
+    }
+    function paintData(data) {
+        const createChart = $('#createChart');
+        var ctx = document.getElementById('myChart').getContext('2d');
+        var myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
+                datasets: [{
+                    label: '人次',
+                    data: data,
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(255, 206, 86, 0.2)',
+                        'rgba(75, 192, 192, 0.2)',
+                        'rgba(153, 102, 255, 0.2)',
+                        'rgba(255, 159, 64, 0.2)',
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(255, 206, 86, 0.2)',
+                        'rgba(75, 192, 192, 0.2)',
+                        'rgba(153, 102, 255, 0.2)',
+                        'rgba(255, 159, 64, 0.2)'
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(153, 102, 255, 1)',
+                        'rgba(255, 159, 64, 1)',
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(153, 102, 255, 1)',
+                        'rgba(255, 159, 64, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
+                }
+            }
+        });
+        $('.content').show();
+    }
+</script>
+<%- include('../project_parts/html-foot.ejs') %>

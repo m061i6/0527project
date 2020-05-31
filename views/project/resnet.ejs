@@ -1,0 +1,67 @@
+<%- include('../project_parts/html-head.ejs') %>
+<%- include('../project_parts/navbar.ejs') %>
+<div class="container">
+    <h1>影像辨識</h1>
+    <div class="row">
+        <div class="col ui warning message">
+            <div class="header">使用方式</div>
+            <ul class="attention">
+                <li>上傳一張影像</li>
+                <li>按下「開始辨識」按鈕</li>
+            </ul>
+        </div>
+    </div>
+    <form id="upload-file" method="post" enctype="multipart/form-data">
+        <fieldset>
+            <label for="file">選擇圖檔:</label>
+            <input id="image" name="image" type="file">
+            <button id="upload-file-btn" type="button" class="btn btn-primary">開始辨識</button>
+        </fieldset>
+    </form>
+    <div id="wrapper" style="width:800px; display:table;">
+        <div id="jsonOutput" style="width:400px; display:table-cell;">
+            <p>Response:</p>
+        </div>
+        <div id="imageDiv" style="width:400px; display:table-cell;">
+            <p>Source image:</p>
+            <img id="imgPreview" width="400">
+        </div>
+    </div>
+</div>
+<%- include('../project_parts/scripts.ejs') %>
+<script>
+    function readURL(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                $('#imgPreview').attr('src', e.target.result);
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+    $("#image").change(function () {
+        readURL(this);
+    });
+
+    $('#upload-file-btn').click(function () {
+        var form_data = new FormData($('#upload-file')[0]);
+        $.ajax({
+            type: 'POST',
+            url: 'http://137.116.46.200/predict',
+            data: form_data,
+            contentType: false,
+            //cache: false,
+            processData: false,
+        }).done(function (result) {
+            var str = "<p>Response:</p>";
+            $.each(result["predictions"], function (index, predict) {
+                str += "<p>" + index + ". " + predict.label + " : " + predict.probability +
+                    "</p>";
+            });
+            $("#jsonOutput").html(str);
+        }).fail(function (err) {
+            alert(err.statusText);
+        });
+    });
+</script>
+<%- include('../project_parts/html-foot.ejs') %>

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<button onclick="doAjax()">doAjax</button>
+<div id="info"></div>
+<button>Click test</button>
+<input type="text">
+
+<script>
+
+    function doAjax() {
+        var xhr = new XMLHttpRequest();
+
+        xhr.onreadystatechange = function (event) {
+            console.log(xhr.readyState, xhr.status);
+            console.log(xhr.responseText);
+            if(xhr.readyState===4 && xhr.status===200){
+                info.innerHTML = xhr.responseText;
+            }
+        };
+        // xhr.open('GET', '/just-pending', true); // 非同步
+        xhr.open('GET', '/just-pending', true); // 同步
+        // XMLHttpRequest.open(method, url[, async[, user[, password]]])
+        xhr.send();
+    }
+
+
+</script>
+</body>
+</html>

@@ -1,0 +1,6 @@
+node_modules/
+public/bootstrap-4.4.1-dist/
+public/img/
+public/jquery-ui-1.12.1/
+public/semantic/
+*.pdf

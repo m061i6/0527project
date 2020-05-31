@@ -1,0 +1,50 @@
+<%- include('../project_parts/html-head.ejs') %>
+<%- include('../project_parts/navbar.ejs') %>
+
+<div class="container">
+    <div id="info-bar" class="alert alert-success" role="alert" style="display: none">
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">登入</h5>
+                    <form name="form1" method="post" onsubmit="return checkForm()">
+                        <div class=" form-group">
+                            <label for="account">account</label>
+                            <input type="text" class="form-control" id="account" name="account">
+                        </div>
+                        <div class="form-group">
+                            <label for="password">password</label>
+                            <input type="password" class="form-control" id="password" name="password">
+                        </div>
+                        <button type="submit" class="btn btn-primary">登入</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+<%- include('../project_parts/scripts.ejs') %>
+<script>
+    function checkForm() {
+        let infoBar = $('#info-bar');
+        infoBar.hide();
+        // TODO: 檢查資料格式是否有誤
+        $.post('/project/login', $(document.form1).serialize(), data => {
+            console.log(data);
+            if (data.success) {
+                location.href = '/project/list';
+                // infoBar.removeClass('alert-danger').addClass('alert-success').text('新增成功');
+            } else {
+                infoBar.removeClass('alert-success').addClass('alert-danger').text('登入失敗');
+            }
+            $('.alert').slideDown();
+        }, 'json');
+        return false;
+    }
+    
+</script>
+<%- include('../project_parts/html-foot.ejs') %>

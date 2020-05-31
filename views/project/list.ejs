@@ -1,0 +1,67 @@
+<%- include('../project_parts/html-head.ejs') %>
+<%- include('../project_parts/navbar.ejs') %>
+<style>
+    .table a>.fa-trash {
+        color: red;
+    }
+</style>
+<div class="container">
+    <h1>國家公園景點列表</h1>
+    <div class="row">
+        <div class="col">
+            <nav aria-label="Page navigation example">
+                <ul class="pagination">
+                    <li class="page-item <%= page<=1 ? 'disabled' : '' %>"><a class="page-link"
+                            href="/project/list/<%=page-1%>"><i class="fas fa-angle-double-left"></i></a></li>
+                    <% for (i=1; i<=totalPages;i++){ %>
+                    <li class="page-item <%= page == i ? 'active' : ''%>">
+                        <a class="page-link" href="/project/list/<%=i%>"><%=i%>
+                        </a>
+                    </li>
+                    <%}%>
+                    <li class="page-item <%= page>=totalPages ? 'disabled' : '' %>"><a class="page-link"
+                        href="/project/list/<%=page+1%>"><i class="fas fa-angle-double-right"></i></a></li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <table class="table table-striped table-bordered">
+                <thead>
+                    <tr>
+                        <th scope="col">序號</th>
+                        <th scope="col">所屬國家公園</th>
+                        <th scope="col">縣市</th>
+                        <th scope="col">景點名稱</th>
+                        <th scope="col">資料紀錄</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% for (let i of rows){ %>
+                    <tr data-sid="<%= i.sid %>">
+                        <th scope="row"><%= i.auto_id %> </th>
+                        <td><%= i.area_name %> </td>
+                        <td><%= i.city_name %> </td>
+                        <td><%= i.name %> </td>
+                        <td><%= i.remark %> </td>
+                    </tr>
+                    <%}%>
+                        <tr>
+                    </tbody>
+                </table>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <canvas id="myChart" width="400" height="400"></canvas>
+        </div>
+    </div>
+    <button type="button" class="btn btn-primary" id="createChart">createChart</button>
+</div>
+<%- include('../project_parts/scripts.ejs') %>
+<script>
+    
+
+</script>
+<%- include('../project_parts/html-foot.ejs') %>
